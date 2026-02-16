@@ -107,6 +107,38 @@ async function fetchCOS(url) {
 
 // ─── Uniqlo ───
 
+// Clean up verbose Uniqlo composition strings
+// Input: "Dieser Artikel wird mit einer der folgenden Optionen geliefert...<br>456675: Körper: 47% Polyester..."
+// Output: "Körper: 47% Polyester, 42% Polyester, 11% Elasthan · Taille: 90% Nylon, 10% Elasthan"
+function cleanUniqloComposition(raw) {
+  if (!raw) return null;
+
+  // Strip HTML tags
+  let text = raw.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').trim();
+
+  // Remove preamble (everything before first percentage pattern, but keep part labels like "Körper:")
+  // Split by newlines, find lines with actual percentages
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const matLines = lines.filter(l => /\d+%/.test(l));
+
+  if (!matLines.length) return text; // fallback to raw
+
+  // Take the first variant only (they're usually near-identical)
+  let line = matLines[0];
+
+  // Strip leading article numbers like "456675: " or "454326, 482536: "
+  line = line.replace(/^[\d,\s]+:\s*/, '');
+
+  // Replace "/" separators with " · " for readability
+  line = line.replace(/\s*\/\s*/g, ' · ');
+
+  // Clean up "Recycelte Fasern" etc — keep it, it's useful info
+  // Collapse multiple spaces
+  line = line.replace(/\s+/g, ' ').trim();
+
+  return line;
+}
+
 // Extract locale info from URL: /de/de/products/... → { country: 'de', lang: 'de' }
 function uniqloParseUrl(url) {
   const m = url.match(/uniqlo\.com\/(\w+)\/(\w+)\/products\/(E\d+-\d+)\/(\d+)/);
@@ -197,7 +229,7 @@ async function fetchUniqlo(url) {
   const product = uniqloExtractProduct(state);
   if (!product) return { error: 'No product in state' };
 
-  const material = product.composition || null;
+  const material = cleanUniqloComposition(product.composition) || null;
 
   // Fetch stock from API (parallel-safe, uses known client ID)
   let sizes = null;
