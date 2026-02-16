@@ -27,6 +27,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
 function detectSite(url) {
   if (url.includes('cos.com')) return 'cos';
+  if (url.includes('arket.com')) return 'arket';
   if (url.includes('uniqlo.com')) return 'uniqlo';
   return null;
 }
@@ -34,6 +35,7 @@ function detectSite(url) {
 async function fetchProduct(url) {
   const site = detectSite(url);
   if (site === 'cos') return fetchCOS(url);
+  if (site === 'arket') return fetchCOS(url); // Same H&M Group Next.js structure
   if (site === 'uniqlo') return fetchUniqlo(url);
   return { error: 'Unknown site' };
 }

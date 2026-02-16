@@ -9,6 +9,7 @@ const SITE = detectSite();
 function detectSite() {
   const host = location.hostname;
   if (host.includes('cos.com')) return 'cos';
+  if (host.includes('arket.com')) return 'arket';
   if (host.includes('uniqlo.com')) return 'uniqlo';
   return null;
 }
@@ -248,7 +249,7 @@ function uniqloScanForCards() {
 let lastUrl = location.href;
 
 function run() {
-  if (SITE === 'cos') {
+  if (SITE === 'cos' || SITE === 'arket') {
     if (cosIsPDP()) cosInjectPDPBadge();
     cosScanForCards();
   } else if (SITE === 'uniqlo') {
