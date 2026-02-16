@@ -90,10 +90,11 @@ async function cosInjectPDPBadge() {
 
   // Find the product info area — try multiple anchors
   const priceEl = document.querySelector('[data-testid="product-price"]');
-  if (!priceEl) return;
+  const h1 = document.querySelector('h1');
+  const anchor = priceEl || h1;
+  if (!anchor) return;
 
-  const priceContainer = priceEl.closest('.flex') || priceEl.parentElement;
-  if (!priceContainer?.parentElement) return;
+  const priceContainer = priceEl ? (priceEl.closest('.flex') || priceEl.parentElement) : null;
 
   let material = null;
   const script = document.getElementById('__NEXT_DATA__');
@@ -109,21 +110,13 @@ async function cosInjectPDPBadge() {
   if (!material) return;
 
   pdpInjected = true;
+
+  // Inject badge right after h1/product name (visible without scrolling)
+  const topAnchor = h1 || priceContainer || anchor;
   const badge = document.createElement('div');
-  badge.className = 'cos-material-badge cos-material-badge--pdp';
+  badge.className = 'cos-material-badge cos-material-badge--pdp-top';
   badge.textContent = material;
-
-  // Inject right after price so it's visible without scrolling
-  priceContainer.insertAdjacentElement('afterend', badge);
-
-  // Also inject at the very top of the product info column (before product name)
-  // so it's the first thing you see
-  const productName = document.querySelector('[data-testid="product-name"], h1');
-  if (productName && productName !== priceContainer) {
-    const topBadge = badge.cloneNode(true);
-    topBadge.className = 'cos-material-badge cos-material-badge--pdp-top';
-    productName.insertAdjacentElement('afterend', topBadge);
-  }
+  topAnchor.insertAdjacentElement('afterend', badge);
 }
 
 function cosGetProductUrl(card) {
@@ -143,7 +136,7 @@ async function cosProcessCard(card) {
   const matBadge = createLoadingBadge();
   container.appendChild(matBadge);
 
-  const imageWrapper = card.querySelector('[data-testid="product-card-image-wrapper"]');
+  const imageWrapper = card.querySelector('[data-testid="product-card-image-wrapper"]') || card.querySelector('.relative.flex-1');
   const target = imageWrapper || card;
   target.style.position = 'relative';
   target.appendChild(container);
@@ -157,7 +150,8 @@ async function cosProcessCard(card) {
 }
 
 function cosScanForCards() {
-  document.querySelectorAll('[data-testid="product-card-wrapper"]').forEach(cosProcessCard);
+  // COS uses product-card-wrapper, Arket uses article[data-testid^="plp-product-card"]
+  document.querySelectorAll('[data-testid="product-card-wrapper"], article[data-testid^="plp-product-card"]').forEach(cosProcessCard);
 }
 
 // ─── Uniqlo: PDP ───
