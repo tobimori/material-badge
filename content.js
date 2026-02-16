@@ -85,6 +85,7 @@ function cosIsPDP() {
 
 async function cosInjectPDPBadge() {
   if (pdpInjected) return;
+  pdpInjected = true;
 
   // Find the product info area — try multiple anchors
   const priceEl = document.querySelector('[data-testid="product-price"]');
@@ -166,6 +167,7 @@ function uniqloIsPDP() {
 
 async function uniqloInjectPDPBadge() {
   if (pdpInjected) return;
+  pdpInjected = true;
 
   // Product name is a div with data-testid="ITOTypography" and font-size-18
   const nameEl = document.querySelector('[data-testid="ITOTypography"].ito-font-size-18');
