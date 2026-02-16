@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "COS Material Badge",
-  "version": "1.0.0",
-  "description": "Shows material composition badges on COS product listing pages",
+  "name": "Material Badge",
+  "version": "1.1.0",
+  "description": "Shows material composition badges on COS and Uniqlo product listing pages",
   "permissions": [],
-  "host_permissions": ["*://*.cos.com/*"],
+  "host_permissions": ["*://*.cos.com/*", "*://*.uniqlo.com/*"],
   "content_scripts": [
     {
-      "matches": ["*://*.cos.com/*"],
+      "matches": ["*://*.cos.com/*", "*://*.uniqlo.com/*"],
       "js": ["content.js"],
       "css": ["styles.css"],
       "run_at": "document_idle"

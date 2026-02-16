@@ -28,7 +28,7 @@
   max-width: 100%;
 }
 
-/* PDP badge */
+/* PDP badge (after price) */
 .cos-material-badge--pdp {
   position: relative;
   display: inline-block;
@@ -41,6 +41,22 @@
   border-radius: 6px;
   pointer-events: auto;
   letter-spacing: 0.03em;
+}
+
+/* PDP top badge (right under product name, above fold) */
+.cos-material-badge--pdp-top {
+  position: relative;
+  display: block;
+  margin: 8px 0 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #f0eeeb;
+  border: 1px solid #d9d5cf;
+  border-radius: 6px;
+  pointer-events: auto;
+  letter-spacing: 0.03em;
+  width: fit-content;
 }
 
 .cos-material-badge--loading {
