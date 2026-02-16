@@ -150,8 +150,19 @@ async function cosProcessCard(card) {
 }
 
 function cosScanForCards() {
-  // COS uses product-card-wrapper, Arket uses article[data-testid^="plp-product-card"]
+  // Known card selectors (listing pages)
   document.querySelectorAll('[data-testid="product-card-wrapper"], article[data-testid^="plp-product-card"]').forEach(cosProcessCard);
+
+  // Generic: any element with a product link + image that hasn't been processed yet
+  // Catches PDP recommendations ("Ähnliche Artikel", "Style with" carousels)
+  document.querySelectorAll('a[href*="/product/"]').forEach(link => {
+    if (!link.querySelector('img')) return;
+    const card = link.closest('li') || link.closest('div.relative');
+    if (!card || PROCESSED.has(card)) return;
+    // Skip if it's inside an already-known card wrapper
+    if (card.closest('[data-testid="product-card-wrapper"]') || card.closest('article[data-testid^="plp-product-card"]')) return;
+    cosProcessCard(card);
+  });
 }
 
 // ─── Uniqlo: PDP ───
