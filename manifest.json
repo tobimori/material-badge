@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "COS Material Badge",
+  "version": "1.0.0",
+  "description": "Shows material composition badges on COS product listing pages",
+  "permissions": [],
+  "host_permissions": ["*://*.cos.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.cos.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {}
+}
