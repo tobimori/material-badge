@@ -167,10 +167,10 @@ function uniqloIsPDP() {
 async function uniqloInjectPDPBadge() {
   if (pdpInjected) return;
 
-  // Look for price area or product name to inject after
+  // Product name is a div with data-testid="ITOTypography" and font-size-18
+  const nameEl = document.querySelector('[data-testid="ITOTypography"].ito-font-size-18');
   const priceEl = document.querySelector('.pdp-product-price, [class*="product-price"], .price-text');
-  const nameEl = document.querySelector('h1');
-  const anchor = priceEl || nameEl;
+  const anchor = nameEl || priceEl || document.querySelector('h1');
   if (!anchor) return;
 
   // Try to get composition from __PRELOADED_STATE__ in the page
@@ -198,7 +198,7 @@ async function uniqloInjectPDPBadge() {
 
   pdpInjected = true;
   const badge = document.createElement('div');
-  badge.className = 'cos-material-badge cos-material-badge--pdp';
+  badge.className = 'cos-material-badge cos-material-badge--pdp-top';
   badge.textContent = material;
   anchor.insertAdjacentElement('afterend', badge);
 }
