@@ -257,10 +257,15 @@ function run() {
   }
 }
 
+function removePDPBadges() {
+  document.querySelectorAll('.cos-material-badge--pdp, .cos-material-badge--pdp-top').forEach(el => el.remove());
+  pdpInjected = false;
+}
+
 function checkNavigation() {
   if (location.href !== lastUrl) {
     lastUrl = location.href;
-    pdpInjected = false;
+    removePDPBadges();
     setTimeout(run, 500);
     setTimeout(run, 1500);
   }
@@ -274,6 +279,6 @@ new MutationObserver(() => {
 }).observe(document.body, { childList: true, subtree: true });
 
 window.addEventListener('popstate', () => {
-  pdpInjected = false;
+  removePDPBadges();
   setTimeout(run, 500);
 });
